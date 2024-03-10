@@ -1,15 +1,10 @@
 #!/usr/bin/python3
-"""state module
+"""state class"""
 
-defines one class State()
-"""
 from models.base_model import BaseModel
 
 
 class State(BaseModel):
-    """state in app
+    """managing state objects"""
 
-    Attributes:
-        name
-    """
     name = ""

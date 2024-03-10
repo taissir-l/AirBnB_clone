@@ -1,17 +1,11 @@
 #!/usr/bin/python3
-"""city module
+"""User class"""
 
-defines class of City()
-"""
 from models.base_model import BaseModel
 
 
 class City(BaseModel):
-    """city in app
+    """managing city objects"""
 
-    Attributes:
-        name
-        state_id
-    """
-    name = ""
     state_id = ""
+    name = ""
