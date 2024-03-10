@@ -2,8 +2,8 @@
 """
 the module: base.py
 """
-import uuid
 import models
+import uuid
 from datetime import datetime
 
 
