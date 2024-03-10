@@ -42,7 +42,7 @@ class BaseModel:
 
     def save(self):
         """attribute updated_at"""
-i
+
         self.updated_at = datetime.now()
         storage.save()
 
