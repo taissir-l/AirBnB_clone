@@ -1,68 +1,52 @@
 #!/usr/bin/python3
-"""review module"""
-import os
+"""module for the Review Class."""
+
 import unittest
-from models.review import Review
-from models import storage
 from datetime import datetime
+import time
+from models.review import Review
+import re
+import json
 from models.engine.file_storage import FileStorage
+import os
+from models import storage
+from models.base_model import BaseModel
 
 
 class TestReview(unittest.TestCase):
-    """cases for the `Review` class."""
+
+    """Review class."""
 
     def setUp(self):
+        """test methods."""
         pass
 
-    def tearDown(self) -> None:
+    def tearDown(self):
+        """down test methods."""
+        self.resetStorage()
+        pass
+
+    def resetStorage(self):
         """FileStorage data."""
         FileStorage._FileStorage__objects = {}
-        if os.path.exists(FileStorage._FileStorage__file_path):
+        if os.path.isfile(FileStorage._FileStorage__file_path):
             os.remove(FileStorage._FileStorage__file_path)
 
-    def test_params(self):
-        """method for class attributes"""
+    def test_8_instantiation(self):
+        """instantiation of Review class."""
 
-        r1 = Review()
-        r3 = Review("hello", "wait", "in")
-        k = f"{type(r1).__name__}.{r1.id}"
-        self.assertIsInstance(r1.text, str)
-        self.assertIsInstance(r1.user_id, str)
-        self.assertIsInstance(r1.place_id, str)
-        self.assertEqual(r3.text, "")
+        b = Review()
+        self.assertEqual(str(type(b)), "<class 'models.review.Review'>")
+        self.assertIsInstance(b, Review)
+        self.assertTrue(issubclass(type(b), BaseModel))
 
-    def test_init(self):
-        """ method for public instances"""
-        r1 = Review()
-        r2 = Review(**r1.to_dict())
-        self.assertIsInstance(r1.id, str)
-        self.assertIsInstance(r1.created_at, datetime)
-        self.assertIsInstance(r1.updated_at, datetime)
-        self.assertEqual(r1.updated_at, r2.updated_at)
-
-    def test_str(self):
-        """method for str representation"""
-        r1 = Review()
-        string = f"[{type(r1).__name__}] ({r1.id}) {r1.__dict__}"
-        self.assertEqual(r1.__str__(), string)
-
-    def test_save(self):
-        """method for save"""
-        r1 = Review()
-        old_update = r1.updated_at
-        r1.save()
-        self.assertNotEqual(r1.updated_at, old_update)
-
-    def test_todict(self):
-        """method for dict"""
-        r1 = Review()
-        r2 = Review(**r1.to_dict())
-        a_dict = r2.to_dict()
-        self.assertIsInstance(a_dict, dict)
-        self.assertEqual(a_dict['__class__'], type(r2).__name__)
-        self.assertIn('created_at', a_dict.keys())
-        self.assertIn('updated_at', a_dict.keys())
-        self.assertNotEqual(r1, r2)
+    def test_8_attributes(self):
+        """attributes of Review class."""
+        attributes = storage.attributes()["Review"]
+        o = Review()
+        for k, v in attributes.items():
+            self.assertTrue(hasattr(o, k))
+            self.assertEqual(type(getattr(o, k, None)), v)
 
 
 if __name__ == "__main__":

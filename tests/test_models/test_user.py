@@ -1,66 +1,52 @@
 #!/usr/bin/python3
-"""the state module"""
-import os
+"""module for the User Class."""
+
 import unittest
-from models.engine.file_storage import FileStorage
-from models.user import User
-from models import storage
 from datetime import datetime
+import time
+from models.user import User
+import re
+import json
+from models.engine.file_storage import FileStorage
+import os
+from models import storage
+from models.base_model import BaseModel
 
 
-class TestState(unittest.TestCase):
+class TestUser(unittest.TestCase):
+
     """User class."""
 
     def setUp(self):
+        """creates test methods."""
         pass
 
-    def tearDown(self) -> None:
+    def tearDown(self):
+        """test methods."""
+        self.resetStorage()
+        pass
+
+    def resetStorage(self):
         """FileStorage data."""
         FileStorage._FileStorage__objects = {}
-        if os.path.exists(FileStorage._FileStorage__file_path):
+        if os.path.isfile(FileStorage._FileStorage__file_path):
             os.remove(FileStorage._FileStorage__file_path)
 
-    def test_params(self):
-        u1 = User()
-        k = f"{type(u1).__name__}.{u1.id}"
-        self.assertIn(k, storage.all())
-        self.assertIsInstance(u1.email, str)
-        self.assertIsInstance(u1.password, str)
-        self.assertIsInstance(u1.first_name, str)
-        self.assertIsInstance(u1.last_name, str)
+    def test_8_instantiation(self):
+        """instantiation of User class."""
 
-    def test_init(self):
-        """method for public instances"""
-        u1 = User()
-        u2 = User(**u1.to_dict())
-        self.assertIsInstance(u1.id, str)
-        self.assertIsInstance(u1.created_at, datetime)
-        self.assertIsInstance(u1.updated_at, datetime)
-        self.assertEqual(u1.updated_at, u2.updated_at)
+        b = User()
+        self.assertEqual(str(type(b)), "<class 'models.user.User'>")
+        self.assertIsInstance(b, User)
+        self.assertTrue(issubclass(type(b), BaseModel))
 
-    def test_str(self):
-        """method for str representation"""
-        u1 = User()
-        string = f"[{type(u1).__name__}] ({u1.id}) {u1.__dict__}"
-        self.assertEqual(u1.__str__(), string)
-
-    def test_save(self):
-        """method for save"""
-        u1 = User()
-        old_update = u1.updated_at
-        u1.save()
-        self.assertNotEqual(u1.updated_at, old_update)
-
-    def test_todict(self):
-        """method for dict"""
-        u1 = User()
-        u2 = User(**u1.to_dict())
-        a_dict = u2.to_dict()
-        self.assertIsInstance(a_dict, dict)
-        self.assertEqual(a_dict['__class__'], type(u2).__name__)
-        self.assertIn('created_at', a_dict.keys())
-        self.assertIn('updated_at', a_dict.keys())
-        self.assertNotEqual(u1, u2)
+    def test_8_attributes(self):
+        """attributes of User class."""
+        attributes = storage.attributes()["User"]
+        o = User()
+        for k, v in attributes.items():
+            self.assertTrue(hasattr(o, k))
+            self.assertEqual(type(getattr(o, k, None)), v)
 
 
 if __name__ == "__main__":
